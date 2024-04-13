@@ -9,7 +9,6 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      # for testing
       ddl-auto: create-drop
     show-sql: true
     properties:

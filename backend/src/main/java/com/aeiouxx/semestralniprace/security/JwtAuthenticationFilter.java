@@ -27,8 +27,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NotNull HttpServletRequest request,
                                     @NotNull HttpServletResponse response,
                                     @NotNull FilterChain filterChain) throws ServletException, IOException {
-        if (request.getServletPath().contains("/api/v1/auth")) {
-            System.out.println("Skipping JWT filter for /api/v1/auth");
+        if (request.getServletPath().contains("/api/auth")) {
+        System.out.println("Skipping JWT filter for /api/auth");
           filterChain.doFilter(request, response);
           return;
         }
@@ -37,7 +37,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String username;
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
-            System.out.println("No authorization header");
             return;
         }
         jwt = authorizationHeader.substring(7);

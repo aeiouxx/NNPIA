@@ -16,6 +16,6 @@ public class ActivityEntry {
     @JoinColumn(name = "activity_id", nullable = false)
     private Activity activity;
     @Column(nullable = false)
-    private LocalDateTime start;
-    private LocalDateTime end;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 }

@@ -6,6 +6,7 @@ import com.aeiouxx.semestralniprace.dto.RegistrationRequest;
 import com.aeiouxx.semestralniprace.model.Role;
 import com.aeiouxx.semestralniprace.model.User;
 import com.aeiouxx.semestralniprace.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +20,8 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+
+    @Transactional
     public AuthenticationResponse register(RegistrationRequest registrationRequest) {
         var user = new User();
         user.setUsername(registrationRequest.getUsername());

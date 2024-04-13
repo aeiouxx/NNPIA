@@ -1,15 +1,24 @@
 package com.aeiouxx.semestralniprace.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
+import com.aeiouxx.semestralniprace.service.UserService;
 
-@RestController
-@RequestMapping("/api/v1/test")
+@Controller
+@RequiredArgsConstructor
 public class TestController {
-    @GetMapping
-    public ResponseEntity<String> testSecured() {
-        return ResponseEntity.ok("I should not be accessible without a token");
+    private final UserService userService;
+
+    @GetMapping("/test")
+    public ResponseEntity<UserDetails> checkSecurityContext() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var user = userService.getUserByUsername(auth.getName());
+        String s = "Hello, " + user.get().getUsername() + "your password is: " + user.get().getPassword();
+        return ResponseEntity.ok().body(user.get());
     }
 }
