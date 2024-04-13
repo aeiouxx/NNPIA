@@ -16,6 +16,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     private final int jwtExpiration = 1000 * 60 * 60 * 10;
+    // Should be stored in a secure location, but for the sake of simplicity it's hardcoded here
     private final String secretKey = "D2ACFDDCD72E7015C9272BE77E7B35C1EE6077111F5B8302F1C8AA2B66B3B57B";
 
     public String extractUsername(String jwt) {
