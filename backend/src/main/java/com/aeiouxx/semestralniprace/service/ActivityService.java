@@ -2,6 +2,7 @@ package com.aeiouxx.semestralniprace.service;
 
 import com.aeiouxx.semestralniprace.model.Activity;
 import com.aeiouxx.semestralniprace.repository.ActivityRepository;
+import com.aeiouxx.semestralniprace.repository.exception.NotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,22 @@ public class ActivityService {
     public Activity createActivity(Activity activity) {
         return activityRepository.save(activity);
     }
+
+    @Transactional
+    public Activity updateActivity(String oldName, Activity activity) {
+        var existingActivity = activityRepository.findByName(oldName)
+                .orElseThrow(() -> new NotFoundException(Activity.class));
+        existingActivity.setName(activity.getName());
+        existingActivity.setDescription(activity.getDescription());
+        existingActivity.setCategory(activity.getCategory());
+        return activityRepository.save(existingActivity);
+    }
+
+    @Transactional
+    public void deleteActivityByName(String name) {
+        activityRepository.deleteByName(name);
+    }
+
     public List<Activity> getActivitiesByUser(Long userId) {
         return activityRepository.findByUserId(userId);
     }
