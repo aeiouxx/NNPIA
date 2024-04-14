@@ -34,15 +34,24 @@ public class CategoryService {
     }
 
     @Transactional
-    public void deleteCategory(Long categoryId) {
-        categoryRepository.findByUserIdAndId(getUserId(), categoryId)
-                .ifPresent(categoryRepository::delete);
+    public Category updateCategory(String oldName, Category category) {
+        var existingCategory = categoryRepository.findByUserIdAndName(getUserId(), oldName)
+                .orElseThrow(() -> new NotFoundException(Category.class));
+        existingCategory.setName(category.getName());
+        return categoryRepository.save(existingCategory);
+    }
+
+    @Transactional
+    public void deleteCategoryByName(String categoryName)
+    {
+        categoryRepository.deleteByUserIdAndName(getUserId(), categoryName)
+                 .orElseThrow(() -> new NotFoundException(Category.class));
     }
 
     private Long getUserId() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByUsername(username)
-                .orElseThrow()
+                .orElseThrow(() -> new NotFoundException(User.class))
                 .getId();
     }
 }

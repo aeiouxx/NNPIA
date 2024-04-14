@@ -4,7 +4,7 @@ import com.aeiouxx.semestralniprace.model.Category;
 import lombok.Data;
 
 @Data
-public class CategoryCreationRequest {
+public class CategoryRequest {
     private String name;
     public Category toEntity() {
         Category category = new Category();

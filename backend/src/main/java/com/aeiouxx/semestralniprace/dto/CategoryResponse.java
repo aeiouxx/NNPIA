@@ -4,9 +4,9 @@ import com.aeiouxx.semestralniprace.model.Category;
 import lombok.Data;
 
 @Data
-public class CategoryCreationResponse {
-    public static CategoryCreationResponse fromEntity(Category category) {
-        CategoryCreationResponse categoryDTO = new CategoryCreationResponse();
+public class CategoryResponse {
+    public static CategoryResponse fromEntity(Category category) {
+        CategoryResponse categoryDTO = new CategoryResponse();
         categoryDTO.setName(category.getName());
         categoryDTO.setUser(category.getUser().getUsername());
         return categoryDTO;
