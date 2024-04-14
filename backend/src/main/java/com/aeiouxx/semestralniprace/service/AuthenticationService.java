@@ -2,7 +2,6 @@ package com.aeiouxx.semestralniprace.service;
 
 import com.aeiouxx.semestralniprace.dto.AuthenticationRequest;
 import com.aeiouxx.semestralniprace.dto.AuthenticationResponse;
-import com.aeiouxx.semestralniprace.dto.RegistrationRequest;
 import com.aeiouxx.semestralniprace.model.Role;
 import com.aeiouxx.semestralniprace.model.User;
 import com.aeiouxx.semestralniprace.repository.UserRepository;
@@ -22,7 +21,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     @Transactional
-    public AuthenticationResponse register(RegistrationRequest registrationRequest) {
+    public AuthenticationResponse register(AuthenticationRequest registrationRequest) {
         var user = new User();
         user.setUsername(registrationRequest.getUsername());
         user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));

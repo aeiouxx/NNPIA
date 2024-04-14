@@ -2,7 +2,6 @@ package com.aeiouxx.semestralniprace.controller;
 
 import com.aeiouxx.semestralniprace.dto.AuthenticationRequest;
 import com.aeiouxx.semestralniprace.dto.AuthenticationResponse;
-import com.aeiouxx.semestralniprace.dto.RegistrationRequest;
 import com.aeiouxx.semestralniprace.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegistrationRequest registrationRequest) {
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody AuthenticationRequest registrationRequest) {
         return ResponseEntity.ok(authenticationService.register(registrationRequest));
     }
     @PostMapping("/authenticate")

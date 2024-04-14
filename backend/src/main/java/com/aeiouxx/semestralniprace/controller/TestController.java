@@ -18,7 +18,7 @@ public class TestController {
     public ResponseEntity<UserDetails> checkSecurityContext() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var user = userService.getUserByUsername(auth.getName());
-        String s = "Hello, " + user.get().getUsername() + "your password is: " + user.get().getPassword();
-        return ResponseEntity.ok().body(user.get());
+        String s = "Hello, " + user.getUsername() + "your password is: " + user.getPassword();
+        return ResponseEntity.ok().body(user);
     }
 }
