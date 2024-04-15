@@ -1,6 +1,7 @@
 package com.aeiouxx.semestralniprace.controller;
 
 import com.aeiouxx.semestralniprace.dto.EntryRequest;
+import com.aeiouxx.semestralniprace.dto.EntryResponse;
 import com.aeiouxx.semestralniprace.model.ActivityEntry;
 import com.aeiouxx.semestralniprace.model.User;
 import com.aeiouxx.semestralniprace.repository.ActivityRepository;
@@ -33,7 +34,7 @@ public class ActivityEntryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createEntry(
+    public ResponseEntity<EntryResponse> createEntry(
             @PathVariable("name") String name ,
             @Valid @RequestBody EntryRequest request,
             @AuthenticationPrincipal User user)
@@ -44,18 +45,21 @@ public class ActivityEntryController {
         var entry = request.toEntity();
         entry.setActivity(activity);
         var result = activityEntryService.createActivityEntry(entry);
-        return ResponseEntity.ok().body(entry);
+        return ResponseEntity.ok().body(EntryResponse.fromEntity(result));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateEntry(
-            @PathVariable("name") String activity,
+    public ResponseEntity<EntryResponse> updateEntry(
+            @PathVariable("name") String name,
             @PathVariable("id") Long id,
-            @RequestBody String entry,
+            @Valid @RequestBody EntryRequest entry,
             @AuthenticationPrincipal User user)
     {
-        log.info("Updating entry `{}` for activity `{}`: `{}`", id, activity, entry);
-        throw new UnsupportedOperationException("Not implemented yet");
+        log.info("Updating entry `{}` for activity `{}`: `{}`", id, name, entry);
+        var activity = activityRepository.findByNameAndUserId(name, user.getId())
+                .orElseThrow(() -> NotFoundException.of(ActivityEntry.class));
+        var updated = activityEntryService.updateActivityEntry(id, entry.toEntity());
+        return ResponseEntity.ok().body(EntryResponse.fromEntity(updated));
     }
 
     @DeleteMapping("/{id}")

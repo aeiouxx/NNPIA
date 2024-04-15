@@ -18,14 +18,15 @@ public class ActivityEntryService {
 
     @Transactional
     public ActivityEntry createActivityEntry(ActivityEntry activity) {
-        var violations = validator.validate(activity);
-        if (!violations.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            for (var violation : violations) {
-                sb.append(violation.getMessage()).append("\n");
-            }
-            throw new IllegalArgumentException(sb.toString());
-        }
         return activityEntryRepository.save(activity);
     }
+
+    @Transactional
+    public ActivityEntry updateActivityEntry(Long id, ActivityEntry activity) {
+        var existing = activityEntryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Activity entry not found"));
+        activity.setId(existing.getId());
+        return activityEntryRepository.save(activity);
+    }
+
 }
