@@ -21,7 +21,7 @@ public class ActivityService {
 
     @Transactional
     public Activity updateActivity(String oldName, Activity activity) {
-        var existingActivity = activityRepository.findByName(oldName)
+        var existingActivity = activityRepository.findByNameAndUserId(oldName, activity.getUser().getId())
                 .orElseThrow(() -> new NotFoundException(Activity.class));
         existingActivity.setName(activity.getName());
         existingActivity.setDescription(activity.getDescription());
@@ -30,25 +30,7 @@ public class ActivityService {
     }
 
     @Transactional
-    public void deleteActivityByName(String name) {
-        activityRepository.deleteByName(name);
-    }
-
-    public List<Activity> getActivitiesByUser(Long userId) {
-        return activityRepository.findByUserId(userId);
-    }
-
-    public Activity getActivityById(Long activityId) {
-        return activityRepository.findById(activityId).orElse(null);
-    }
-
-    @Transactional
-    public Activity updateActivity(Activity activity) {
-        return activityRepository.save(activity);
-    }
-
-    @Transactional
-    public void deleteActivity(Long activityId) {
-        activityRepository.deleteById(activityId);
+    public void deleteActivity(Activity activity) {
+        activityRepository.deleteByNameAndUserId(activity.getName(), activity.getUser().getId());
     }
 }

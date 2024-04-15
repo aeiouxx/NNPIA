@@ -1,6 +1,7 @@
 package com.aeiouxx.semestralniprace.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.AssertTrue;
 import lombok.Data;
 
 import java.time.LocalDateTime;

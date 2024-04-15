@@ -66,7 +66,10 @@ public class ActivityController {
                                @AuthenticationPrincipal User user
      ) {
         log.info("Deleting activity `{}` for user: {}", name, user.getUsername());
-        activityService.deleteActivityByName(name);
+        var activity = new Activity();
+        activity.setName(name);
+        activity.setUser(user);
+        activityService.deleteActivity(activity);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
      }
 

@@ -6,4 +6,9 @@ public class NotFoundException extends RuntimeException {
         super("Entity of type " + Type.getSimpleName() + " not found.");
         this.Type = Type;
     }
+
+
+    public static NotFoundException of(Class<?> Type) {
+        return new NotFoundException(Type);
+    }
 }
