@@ -16,7 +16,6 @@ interface AuthenticationProviderProps {
 export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({children}) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-
   const login = (token: string) => {
     localStorage.setItem("token", token);
     setIsAuthenticated(true);

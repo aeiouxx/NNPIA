@@ -6,8 +6,6 @@ import { AuthenticationProvider } from './security/authentication-context.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <AuthenticationProvider>
-      <App />
-    </AuthenticationProvider>
+    <App />
   </React.StrictMode>,
 )
