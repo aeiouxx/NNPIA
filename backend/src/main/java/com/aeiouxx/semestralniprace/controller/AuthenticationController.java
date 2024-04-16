@@ -34,6 +34,7 @@ public class AuthenticationController {
 
     @PostMapping("/validate-token")
     public ResponseEntity<?> validateToken(@RequestBody String token) {
+        log.info("Validating token: {}", token);
         try {
             if (jwtService.isTokenValid(token,
                     userDetailsService.loadUserByUsername(
@@ -43,7 +44,10 @@ public class AuthenticationController {
                 return ResponseEntity.ok("Token is valid");
             }
         } catch (Exception e) {
-            log.error("Error parsing token", e);
+            log.atError()
+                    .setCause(e)
+                    .addArgument(token)
+                    .log("Error parsing token: {}");
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is invalid");
     }
