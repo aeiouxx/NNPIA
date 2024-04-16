@@ -27,7 +27,6 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({c
   };
 
   useEffect(() => {
-    login("test");
     const token = localStorage.getItem("token");
     if (token) {
       validateToken(token).then((result) => {
