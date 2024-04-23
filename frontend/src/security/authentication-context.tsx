@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import config from "../config.ts";
+import axios from "axios";
 
 
 interface AuthenticationContextType {
@@ -37,28 +38,21 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({c
     }
   }, []);
 
-  const validateToken = async (token: string) : Promise<boolean> => {
-    const options = {
-      method: "POST",
+const validateToken = async (token: string): Promise<boolean> => {
+  const url = `${config.apiBaseUrl}/auth/validate-token`;
+  console.log("Validating token at url = ", url);
+  try {
+    const response = await axios.post(url, { token }, {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ token }),
-    };
-    try {
-      const url = `${config.apiBaseUrl}/auth/validate-token`;
-      console.log("Validating token at url = ", url);
-      const response = await fetch(url, options);
-      if (response.ok) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (error) {
-      console.error("Error validating token", error);
-      return false;
-    }
-  };
+    });
+    return response.status === 200;
+  } catch (error) {
+    console.error("Error validating token", error);
+    return false;
+  }
+};
 
   return (
     <AuthenticationContext.Provider value= {{ isAuthenticated, login, logout }}>
