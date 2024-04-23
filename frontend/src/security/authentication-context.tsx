@@ -14,6 +14,14 @@ interface AuthenticationProviderProps {
   children: React.ReactNode;
 }
 
+// CORS: Cross-Origin Resource Sharing
+// Umožňuje webovým aplikacím z různých domén přistupovat k zdrojům na jiných doménách.
+// CORS je mechanismus, který umožňuje serveru říct prohlížeči, zda může nebo nemůže sdílet zdroje s webovou stránkou, která požaduje zdroje.
+// CORS funguje tak, že server přidá do odpovědi HTTP hlavičku Access-Control-Allow-Origin, která obsahuje doménu, která může přistupovat k zdrojům.
+// Pokud je doména, ze které je zdroj požadován, obsažena v hlavičce Access-Control-Allow-Origin, prohlížeč zobrazí zdroj.
+// Pokud není obsažena, prohlížeč zobrazí chybu.
+// CORS je bezpečnostní mechanismus, který zabraňuje útokům typu Cross-Site Request Forgery (CSRF).
+// CORS je standardní mechanismus, který je podporován všemi moderními prohlížeči.
 export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({children}) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
