@@ -3,8 +3,7 @@ import config from "../config.ts";
 import axios from "axios";
 
 
-// TODO: session info
-interface UserInfo {
+export interface UserInfo {
   username: string;
 }
 

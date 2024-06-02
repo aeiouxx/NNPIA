@@ -5,6 +5,7 @@ import AuthPage from './components/auth-page.tsx';
 import { ProtectedRoute } from './security/protected-route.tsx';
 import NotFoundPage from './components/not-found-page.tsx';
 import FullPageSpinner from './components/page-spinner.tsx';
+import CategoryManager from './components/protected/category/category-manager.tsx';
 
 
 const router = createBrowserRouter([
@@ -18,8 +19,12 @@ const router = createBrowserRouter([
     children: [
       {
         path: "home",
-        element: <div>Home</div>,
+        element: <div>Home</div>
       },
+      {
+        path: "category",
+        element: <CategoryManager />
+      }
     ],
   },
   {
