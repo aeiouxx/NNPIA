@@ -3,7 +3,9 @@ server:
     context-path: "/api"
 logging:
   level:
+    root: WARN
     org.springframework.security: DEBUG
+    com.aeiouxx.semestralniprace: TRACE
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/nnpia_db

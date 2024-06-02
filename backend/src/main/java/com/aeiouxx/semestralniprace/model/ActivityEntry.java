@@ -18,5 +18,6 @@ public class ActivityEntry {
     private Activity activity;
     @Column(nullable = false)
     private LocalDateTime startTime;
+    @Column(nullable = false)
     private LocalDateTime endTime;
 }

@@ -1,9 +1,15 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import config from "../config.ts";
+import axios from "axios";
 
+
+export interface UserInfo {
+  username: string;
+}
 
 interface AuthenticationContextType {
   isAuthenticated: boolean;
+  user: UserInfo | null;
   login: (token : string) => void;
   logout: () => void;
 }
@@ -15,6 +21,8 @@ interface AuthenticationProviderProps {
 
 export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({children}) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [user, setUser] = useState<UserInfo | null>({ username: "Placeholder"});
+
 
   const login = (token: string) => {
     localStorage.setItem("token", token);
@@ -30,6 +38,7 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({c
     if (token) {
       validateToken(token).then((result) => {
         setIsAuthenticated(result);
+        console.log("Is current token valid: ", result);
         if (!result) {
           logout();
         }
@@ -37,31 +46,24 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({c
     }
   }, []);
 
-  const validateToken = async (token: string) : Promise<boolean> => {
-    const options = {
-      method: "POST",
+const validateToken = async (token: string): Promise<boolean> => {
+  const url = `${config.authBaseUrl}/validate-token`;
+  console.log("Validating token at url = ", url);
+  try {
+    const response = await axios.post(url, { token }, {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ token }),
-    };
-    try {
-      const url = `${config.apiBaseUrl}/auth/validate-token`;
-      console.log("Validating token at url = ", url);
-      const response = await fetch(url, options);
-      if (response.ok) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (error) {
-      console.error("Error validating token", error);
-      return false;
-    }
-  };
+    });
+    return response.status === 200;
+  } catch (error) {
+    console.error("Error validating token", error);
+    return false;
+  }
+};
 
   return (
-    <AuthenticationContext.Provider value= {{ isAuthenticated, login, logout }}>
+    <AuthenticationContext.Provider value= {{ isAuthenticated, login, logout, user }}>
       {children}
     </AuthenticationContext.Provider>
   );

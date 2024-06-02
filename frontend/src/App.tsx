@@ -1,14 +1,17 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import './App.css'
-import { AuthenticationProvider, useAuthentication } from './security/authentication-context.tsx'
-import LoginPage from './components/login-page.tsx';
+import { AuthenticationProvider } from './security/authentication-context.tsx'
+import AuthPage from './components/auth-page.tsx';
 import { ProtectedRoute } from './security/protected-route.tsx';
+import NotFoundPage from './components/not-found-page.tsx';
+import FullPageSpinner from './components/page-spinner.tsx';
+import CategoryManager from './components/protected/category/category-manager.tsx';
 
 
 const router = createBrowserRouter([
   {
-    path: "/login",
-    element: <LoginPage />,
+    path: "/auth",
+    element: <AuthPage />,
   },
   {
     path: "/",
@@ -16,10 +19,22 @@ const router = createBrowserRouter([
     children: [
       {
         path: "home",
-        element: <div>Home</div>,
+        element: <div>Home</div>
       },
+      {
+        path: "category",
+        element: <CategoryManager />
+      }
     ],
   },
+  {
+    path: "/spin",
+    element: <FullPageSpinner />
+  },
+  {
+    path: "*",
+    element: <NotFoundPage />,
+  }
 ]);
 
 function App() {
