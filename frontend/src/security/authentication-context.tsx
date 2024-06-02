@@ -3,8 +3,14 @@ import config from "../config.ts";
 import axios from "axios";
 
 
+// TODO: session info
+interface UserInfo {
+  username: string;
+}
+
 interface AuthenticationContextType {
   isAuthenticated: boolean;
+  user: UserInfo | null;
   login: (token : string) => void;
   logout: () => void;
 }
@@ -14,16 +20,10 @@ interface AuthenticationProviderProps {
   children: React.ReactNode;
 }
 
-// CORS: Cross-Origin Resource Sharing
-// Umožňuje webovým aplikacím z různých domén přistupovat k zdrojům na jiných doménách.
-// CORS je mechanismus, který umožňuje serveru říct prohlížeči, zda může nebo nemůže sdílet zdroje s webovou stránkou, která požaduje zdroje.
-// CORS funguje tak, že server přidá do odpovědi HTTP hlavičku Access-Control-Allow-Origin, která obsahuje doménu, která může přistupovat k zdrojům.
-// Pokud je doména, ze které je zdroj požadován, obsažena v hlavičce Access-Control-Allow-Origin, prohlížeč zobrazí zdroj.
-// Pokud není obsažena, prohlížeč zobrazí chybu.
-// CORS je bezpečnostní mechanismus, který zabraňuje útokům typu Cross-Site Request Forgery (CSRF).
-// CORS je standardní mechanismus, který je podporován všemi moderními prohlížeči.
 export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({children}) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [user, setUser] = useState<UserInfo | null>({ username: "Placeholder"});
+
 
   const login = (token: string) => {
     localStorage.setItem("token", token);
@@ -39,6 +39,7 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({c
     if (token) {
       validateToken(token).then((result) => {
         setIsAuthenticated(result);
+        console.log("Is current token valid: ", result);
         if (!result) {
           logout();
         }
@@ -47,7 +48,7 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({c
   }, []);
 
 const validateToken = async (token: string): Promise<boolean> => {
-  const url = `${config.apiBaseUrl}/auth/validate-token`;
+  const url = `${config.authBaseUrl}/validate-token`;
   console.log("Validating token at url = ", url);
   try {
     const response = await axios.post(url, { token }, {
@@ -63,7 +64,7 @@ const validateToken = async (token: string): Promise<boolean> => {
 };
 
   return (
-    <AuthenticationContext.Provider value= {{ isAuthenticated, login, logout }}>
+    <AuthenticationContext.Provider value= {{ isAuthenticated, login, logout, user }}>
       {children}
     </AuthenticationContext.Provider>
   );
