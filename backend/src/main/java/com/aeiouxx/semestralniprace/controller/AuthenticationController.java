@@ -8,6 +8,7 @@ import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
@@ -25,20 +26,30 @@ public class AuthenticationController {
     private final UserDetailsService userDetailsService;
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody AuthenticationRequest registrationRequest) {
-        return ResponseEntity.ok(authenticationService.register(registrationRequest));
+        log.debug("Received registration request: {}", registrationRequest);
+        var response = authenticationService.register(registrationRequest);
+        log.debug("Returning response: {}", response);
+        return ResponseEntity.ok(
+                response
+        );
     }
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authRequest) {
-        return ResponseEntity.ok(authenticationService.authenticate(authRequest));
+        log.debug("Received authentication request: {}", authRequest);
+        var response = authenticationService.authenticate((authRequest));
+        log.debug("Returning response: {}", response.getToken());
+        return ResponseEntity.ok(
+                response);
     }
 
-    @PostMapping("/validate-token")
-    public ResponseEntity<?> validateToken(@RequestBody String token) {
-        log.info("Validating token: {}", token);
+    record TokenToValidate(String token) {}
+    @PostMapping(value = "/validate-token")
+    public ResponseEntity<?> validateToken(@RequestBody TokenToValidate token) {
         try {
-            if (jwtService.isTokenValid(token,
+            var jwt = token.token;
+            if (jwtService.isTokenValid(jwt,
                     userDetailsService.loadUserByUsername(
-                            jwtService.extractUsername(token)
+                            jwtService.extractUsername(jwt)
                     )
             )) {
                 return ResponseEntity.ok("Token is valid");

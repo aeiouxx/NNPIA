@@ -3,6 +3,7 @@ package com.aeiouxx.semestralniprace.service;
 import com.aeiouxx.semestralniprace.model.Activity;
 import com.aeiouxx.semestralniprace.model.ActivityEntry;
 import com.aeiouxx.semestralniprace.repository.ActivityEntryRepository;
+import com.aeiouxx.semestralniprace.service.exception.OverlappingActivityEntryException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
@@ -29,4 +30,14 @@ public class ActivityEntryService {
         return activityEntryRepository.save(activity);
     }
 
+    private void validateNoOverlappingEntries(ActivityEntry newEntry) {
+        List<ActivityEntry> overlapping = activityEntryRepository.findOverlappingEntries(
+                newEntry.getActivity().getUser().getId(),
+                newEntry.getStartTime(),
+                newEntry.getEndTime()
+        );
+        if (!overlapping.isEmpty()) {
+            throw new OverlappingActivityEntryException("Activity time slot overlaps with existing entry");
+        }
+    }
 }
