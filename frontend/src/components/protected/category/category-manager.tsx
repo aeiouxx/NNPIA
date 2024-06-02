@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import protectedAxios from "../../../utils/axios-token";
+import { Alert, Button } from "@mui/material";
+import { mapErrorToMessage } from "../../../utils/axios-get-error";
 
 interface Category {
   name: string;
@@ -13,11 +15,14 @@ const CategoryManager: React.FC = () => {
   const [filterText, setFilterText] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [sortField, setSortField] = useState<string>('name');
+  const [sortOrder, setSortOrder] = useState<string>('asc');
   const itemsPerPage = 10;
 
   useEffect(() => {
     fetchCategories();
-  }, [currentPage, filterText]);
+  }, [currentPage, filterText, sortField, sortOrder]);
 
   const fetchCategories = async () => {
     try {
@@ -26,13 +31,15 @@ const CategoryManager: React.FC = () => {
           page: currentPage - 1,
           size: itemsPerPage,
           filter: filterText,
+          sortField: sortField,
+          sortOrder: sortOrder,
         },
       });
       console.log(JSON.stringify(response.data.content));
       setCategories(response.data.content);
       setTotalPages(response.data.totalPages);
     } catch (error) {
-      console.error('Error fetching categories', error);
+      setErrorMessage(mapErrorToMessage(error));
     }
   };
 
@@ -42,7 +49,9 @@ const CategoryManager: React.FC = () => {
       fetchCategories();
       setNewCategoryName('');
     } catch (error) {
-      console.error('Error creating category', error);
+      setErrorMessage(mapErrorToMessage(error, {
+        409: 'Category already exists',
+      }));
     }
   };
 
@@ -52,7 +61,9 @@ const CategoryManager: React.FC = () => {
       await protectedAxios.delete(`/categories/${categoryName}`);
       fetchCategories();
     } catch (error) {
-      console.error('Error deleting category', error);
+      setErrorMessage(mapErrorToMessage(error, {
+        404: 'Category not found',
+      }));
     }
   };
 
@@ -60,9 +71,20 @@ const CategoryManager: React.FC = () => {
     setCurrentPage(page);
   };
 
+  const handleSort = (field: string) => {
+    if (sortField === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    }
+    else {
+      setSortField(field);
+      setSortOrder('asc');
+    }
+  }
+
   return (
     <div className="p-4">
       <h2 className="text-2xl mb-4 flex">Category Manager</h2>
+
       <div className="mb-4 flex items-center">
         <input
           type="text"
@@ -83,12 +105,26 @@ const CategoryManager: React.FC = () => {
         />
       </div>
 
+      {errorMessage && 
+      <div className="flex mb-4 flex-1">
+        <Alert severity="error">{errorMessage}
+          <Button onClick={() => setErrorMessage(null)} className="text-white p-2 rounded ml-4">Close</Button>
+        </Alert>
+      </div>
+      }
+
       <table className="min-w-full bg-white">
         <thead>
           <tr>
-            <th className="py-2 px-4 border-b">Name</th>
-            <th className="py-2 px-4 border-b">Activities</th>
-            <th className="py-2 px-4 border-b">Entries</th>
+            <th className="py-2 px-4 border-b cursor-pointer" onClick={() => handleSort('name')}>
+              Name {sortField === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
+            </th>
+            <th className="py-2 px-4 border-b">
+              Activities
+            </th>
+            <th className="py-2 px-4 border-b">
+              Entries
+            </th>
             <th className="py-2 px-4 border-b">Actions</th>
           </tr>
         </thead>
@@ -111,7 +147,7 @@ const CategoryManager: React.FC = () => {
       <div className="flex justify-between items-center mt-4">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
+          disabled={currentPage <= 1}
           className="bg-gray-300 hover:bg-gray-400 text-black p-2 rounded disabled:opacity-50"
         >
           Previous
@@ -121,7 +157,7 @@ const CategoryManager: React.FC = () => {
         </span>
         <button
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
+          disabled={currentPage >= totalPages}
           className="bg-gray-300 hover:bg-gray-400 text-black p-2 rounded disabled:opacity-50"
         >
           Next
