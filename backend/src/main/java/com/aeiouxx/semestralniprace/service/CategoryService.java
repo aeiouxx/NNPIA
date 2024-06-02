@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.aeiouxx.semestralniprace.model.Category;
@@ -34,9 +35,8 @@ public class CategoryService {
     // < Advanced operations
     // > Basic CRUD operations
     @Transactional
-    public Category create(Category category) {
-        category.setUser(userRepository.findById(getUserId())
-                .orElseThrow(() -> new NotFoundException(User.class)));
+    public Category create(Category category, User user) {
+        category.setUser(user);
         return categoryRepository.save(category);
     }
     @Transactional

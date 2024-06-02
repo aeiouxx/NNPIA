@@ -16,12 +16,13 @@ import java.util.Optional;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    @Query("SELECT new com.aeiouxx.semestralniprace.dto.CategorySummary(c.name, COUNT(a) ,COUNT(ae)) " +
+    @Query("SELECT new com.aeiouxx.semestralniprace.dto.CategorySummary(cs.name, cs.totalActivities, cs.totalEntries) " +
+            "FROM (SELECT c.name as name, COUNT(a) as totalActivities, COUNT(ae) as totalEntries " +
             "FROM Category c LEFT JOIN Activity a ON c.id = a.category.id " +
             "LEFT JOIN ActivityEntry ae ON a.id = ae.activity.id " +
             "WHERE c.user.id = :userId " +
             "AND (:filter IS NULL OR c.name LIKE %:filter%) " +
-            "GROUP BY c.name")
+            "GROUP BY c.id) as cs")
     Page<CategorySummary> findCategorySummariesByUserId(Pageable pageable,
                                                         @Param("userId") Long userId,
                                                         @Param("filter") String filter);

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,20 +28,23 @@ public class CategoryController {
     public Page<CategorySummary> getCategorySummaries(@RequestParam(defaultValue = "0") int page,
                                                       @RequestParam(defaultValue = "10") int size,
                                                       @RequestParam(required = false) String filter,
+                                                      @RequestParam(defaultValue = "name") String sortField,
+                                                      @RequestParam(defaultValue = "asc") String sortOrder,
                                                       @AuthenticationPrincipal User user) {
         log.debug("Getting category summaries for user: {}", user);
-        var pageable = PageRequest.of(page, size);
-        return categoryService.getSummariesForUser(pageable, user, filter);
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortField);
+        PageRequest pageable = PageRequest.of(page, size, sort);
+        Page<CategorySummary> result = categoryService.getSummariesForUser(pageable, user, filter);
+        log.debug("First page: {}", result.getContent());
+        return result;
     }
-
-
 
     @PostMapping
     public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryRequest categoryDTO,
                                                            @AuthenticationPrincipal User user) {
         log.debug("Creating category for user: {}", user);
         var category = categoryDTO.toEntity();
-        var result = categoryService.create(category);
+        var result = categoryService.create(category, user);
         var response = CategoryResponse.fromEntity(result);
         return new ResponseEntity<>(response,
                 HttpStatus.CREATED);

@@ -14,10 +14,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         if (ex.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
             org.hibernate.exception.ConstraintViolationException cve = (org.hibernate.exception.ConstraintViolationException) ex.getCause();
-            if (cve.getConstraintName().contains("username")) {
-                return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body("Username already exists.");
-            }
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("{} already exists.".formatted(cve.getConstraintName()));
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Request could not be processed due to a conflict with the current state of the resource.");
