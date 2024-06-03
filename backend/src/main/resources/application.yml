@@ -7,6 +7,9 @@ logging:
     org.springframework.security: DEBUG
     com.aeiouxx.semestralniprace: TRACE
 spring:
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yml
+    enabled: true
   datasource:
     url: jdbc:postgresql://localhost:5432/nnpia_db
     username: nnpUser
@@ -14,7 +17,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
