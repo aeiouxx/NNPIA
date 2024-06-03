@@ -1,0 +1,158 @@
+databaseChangeLog:
+- changeSet:
+    id: 1
+    author: aeiox (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: category_id
+            type: BIGINT
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: activities_pkey
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: BIGINT
+        - column:
+            name: description
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(255)
+        tableName: activities
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: activity_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: end_time
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: activity_entries_pkey
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: start_time
+            type: TIMESTAMP WITHOUT TIME ZONE
+        tableName: activity_entries
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: categories_pkey
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: BIGINT
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: categories
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: users_pkey
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: password
+            type: VARCHAR(255)
+        - column:
+            name: role
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: username
+            type: VARCHAR(255)
+        tableName: users
+    - addUniqueConstraint:
+        columnNames: name, user_id
+        constraintName: activities_name_user_id_key
+        tableName: activities
+    - addUniqueConstraint:
+        columnNames: name, user_id
+        constraintName: categories_name_user_id_key
+        tableName: categories
+    - addUniqueConstraint:
+        columnNames: username
+        constraintName: users_username_key
+        tableName: users
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: categories
+        constraintName: fkghuylkwuedgl2qahxjt8g41kb
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+    - addForeignKeyConstraint:
+        baseColumnNames: category_id
+        baseTableName: activities
+        constraintName: fkop5fy6liunnty8edw5q842b2n
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: categories
+        validate: true
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: activities
+        constraintName: fkq6cjukylkgxdjkm9npk9va2f2
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+    - addForeignKeyConstraint:
+        baseColumnNames: activity_id
+        baseTableName: activity_entries
+        constraintName: fkqsfuevjdv4na30av3qvpcfyek
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: activities
+        validate: true
+
