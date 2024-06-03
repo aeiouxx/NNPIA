@@ -1,7 +1,7 @@
 databaseChangeLog:
 - changeSet:
     id: 1
-    author: aeiox (generated)
+    author: aeiouxx
     changes:
     - createTable:
         columns:
