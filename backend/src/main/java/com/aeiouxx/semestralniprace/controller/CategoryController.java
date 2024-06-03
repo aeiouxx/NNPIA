@@ -2,11 +2,10 @@ package com.aeiouxx.semestralniprace.controller;
 
 import com.aeiouxx.semestralniprace.dto.CategoryRequest;
 import com.aeiouxx.semestralniprace.dto.CategoryResponse;
-import com.aeiouxx.semestralniprace.dto.CategorySummary;
-import com.aeiouxx.semestralniprace.model.Category;
+import com.aeiouxx.semestralniprace.dto.CategorySummaryResponse;
 import com.aeiouxx.semestralniprace.model.User;
 import com.aeiouxx.semestralniprace.service.CategoryService;
-import com.aeiouxx.semestralniprace.service.UserService;
+import com.aeiouxx.semestralniprace.service.CategorySummaryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,17 +23,18 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class CategoryController {
     private final CategoryService categoryService;
+    private final CategorySummaryService categorySummaryService;
     @GetMapping("/summary")
-    public Page<CategorySummary> getCategorySummaries(@RequestParam(defaultValue = "0") int page,
-                                                      @RequestParam(defaultValue = "10") int size,
-                                                      @RequestParam(required = false) String filter,
-                                                      @RequestParam(defaultValue = "name") String sortField,
-                                                      @RequestParam(defaultValue = "asc") String sortOrder,
-                                                      @AuthenticationPrincipal User user) {
+    public Page<CategorySummaryResponse> getCategorySummaries(@RequestParam(defaultValue = "0") int page,
+                                                              @RequestParam(defaultValue = "10") int size,
+                                                              @RequestParam(required = false) String filter,
+                                                              @RequestParam(defaultValue = "name") String sortField,
+                                                              @RequestParam(defaultValue = "asc") String sortOrder,
+                                                              @AuthenticationPrincipal User user) {
         log.debug("Getting category summaries for user: {}", user);
         Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortField);
         PageRequest pageable = PageRequest.of(page, size, sort);
-        Page<CategorySummary> result = categoryService.getSummariesForUser(pageable, user, filter);
+        Page<CategorySummaryResponse> result = categorySummaryService.getForUser(pageable, user.getId(), filter);
         log.debug("First page: {}", result.getContent());
         return result;
     }

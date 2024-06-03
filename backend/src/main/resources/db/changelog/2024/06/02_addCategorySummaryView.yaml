@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: aeiouxx
+      changes:
+        - createView:
+            viewName: category_summary
+            selectQuery: |
+              SELECT
+                c.user_id AS user_id,
+                c.name AS name,
+                COUNT(a.id) AS activity_count,
+                COUNT(ae.id) AS entry_count
+              FROM
+                categories c
+              LEFT JOIN 
+                activities a ON c.id = a.category_id
+              LEFT JOIN 
+                activity_entries ae ON a.id = ae.activity_id
+              GROUP BY
+                  c.user_id, c.name

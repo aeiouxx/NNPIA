@@ -3,14 +3,14 @@ import protectedAxios from "../../../utils/axios-token";
 import { Alert, Button } from "@mui/material";
 import { mapErrorToMessage } from "../../../utils/axios-get-error";
 
-interface Category {
+interface CategorySummary {
   name: string;
   totalActivities: number;
   totalEntries: number;
 }
 
 const CategoryManager: React.FC = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<CategorySummary[]>([]);
   const [newCategoryName, setNewCategoryName] = useState<string>('');
   const [filterText, setFilterText] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -117,13 +117,22 @@ const CategoryManager: React.FC = () => {
         <thead>
           <tr>
             <th className="py-2 px-4 border-b cursor-pointer" onClick={() => handleSort('name')}>
-              Name {sortField === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
+              Name 
+              <span className="block text-center">
+                {sortField === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </span>
             </th>
-            <th className="py-2 px-4 border-b">
+            <th className="py-2 px-4 border-b cursor-pointer" onClick={() => handleSort('activityCount')}>
               Activities
+              <span className="block text-center">
+                {sortField === 'activityCount' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </span>
             </th>
-            <th className="py-2 px-4 border-b">
+            <th className="py-2 px-4 border-b cursor-pointer" onClick={() => handleSort('entryCount')}>
               Entries
+              <span className="block text-center">
+                {sortField === 'entryCount' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </span>
             </th>
             <th className="py-2 px-4 border-b">Actions</th>
           </tr>

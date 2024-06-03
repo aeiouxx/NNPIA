@@ -1,6 +1,6 @@
 package com.aeiouxx.semestralniprace.service;
 
-import com.aeiouxx.semestralniprace.dto.CategorySummary;
+import com.aeiouxx.semestralniprace.dto.CategorySummaryResponse;
 import com.aeiouxx.semestralniprace.model.User;
 import com.aeiouxx.semestralniprace.repository.CategoryRepository;
 import com.aeiouxx.semestralniprace.repository.UserRepository;
@@ -9,12 +9,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.aeiouxx.semestralniprace.model.Category;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,9 +21,6 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     // Advanced operations
-    public Page<CategorySummary> getSummariesForUser(Pageable pageable, User user, String filter) {
-        return categoryRepository.findCategorySummariesByUserId(pageable, user.getId(), filter);
-    }
     public Page<Category> getForUser(Pageable pageable, User user) {
         return categoryRepository.findByUserId(pageable, user.getId());
     }

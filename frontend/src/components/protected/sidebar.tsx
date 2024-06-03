@@ -12,6 +12,9 @@ const Sidebar: React.FC = () => {
             <NavLink to="/category" className={linkClasses}>
               Category
             </NavLink>
+            <NavLink to="/activity" className={linkClasses}>
+              Activity
+            </NavLink>
           </li>
         </ul>
       </nav>

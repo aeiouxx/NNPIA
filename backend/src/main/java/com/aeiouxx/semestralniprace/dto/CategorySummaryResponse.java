@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategorySummary {
+public class CategorySummaryResponse {
     private String name;
     private long totalActivities;
     private long totalEntries;

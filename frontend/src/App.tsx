@@ -5,7 +5,8 @@ import AuthPage from './components/auth-page.tsx';
 import { ProtectedRoute } from './security/protected-route.tsx';
 import NotFoundPage from './components/not-found-page.tsx';
 import FullPageSpinner from './components/page-spinner.tsx';
-import CategoryManager from './components/protected/category/category-manager.tsx';
+import CategoryManager from './components/protected/managers/category-manager.tsx';
+import ActivityManager from './components/protected/managers/activity-manager.tsx';
 
 
 const router = createBrowserRouter([
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "category",
         element: <CategoryManager />
+      },
+      {
+        path: "activity",
+        element: <ActivityManager />
       }
     ],
   },
