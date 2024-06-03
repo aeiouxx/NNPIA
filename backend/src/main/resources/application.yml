@@ -9,7 +9,10 @@ logging:
 spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yml
-    enabled: true
+    url: jdbc:postgresql://localhost:5432/nnpia_db
+    user: nnpUser
+    password: nnpPassword
+    driver-class-name: org.postgresql.Driver
   datasource:
     url: jdbc:postgresql://localhost:5432/nnpia_db
     username: nnpUser
