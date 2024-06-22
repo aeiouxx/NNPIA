@@ -74,9 +74,9 @@ const AuthPage = () => {
       console.log(JSON.stringify(error));
       var message = mapErrorToMessage(error,
         {
-          409: "User",
-          401: "credentials",
-          403: "credentials"
+          409: "User already exists",
+          401: "Invalid credentials",
+          403: "Invalid credentials"
         });
         setErrorMessage(message);
     }

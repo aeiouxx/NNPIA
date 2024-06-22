@@ -1,4 +1,4 @@
-import { UserInfo, useAuthentication } from "../../security/authentication-context"
+import { UserInfo } from "../../security/authentication-context"
 
 type HeaderProps = {
   user: UserInfo;
