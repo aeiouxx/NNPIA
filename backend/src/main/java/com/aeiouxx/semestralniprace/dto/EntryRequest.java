@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 
 public class EntryRequest {
 
-    @NotBlank(message = "Activity name must be specified")
+    @NotBlank(message = "Activity name must be specified.")
     private String activityName;
-    @NotBlank(message = "Start time must be specified")
+    @NotBlank(message = "Start time must be specified.")
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    @AssertTrue(message = "End time must be after start time if specified")
+    @AssertTrue(message = "End time must be after start time if specified.")
     private boolean isEndTimeValid() {
         return endTime == null || endTime.isAfter(startTime);
     }

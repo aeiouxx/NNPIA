@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CategorySummaryResponse {
     private String name;
-    private long totalActivities;
-    private long totalEntries;
+    private Long activityCount;
+    private Long entryCount;
 }

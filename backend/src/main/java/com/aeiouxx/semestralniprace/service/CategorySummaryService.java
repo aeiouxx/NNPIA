@@ -17,8 +17,8 @@ public class CategorySummaryService {
         return categorySummaryRepository.findCategorySummariesByUserId(pageable, userId, filter)
                 .map(cs -> CategorySummaryResponse.builder()
                         .name(cs.getName())
-                        .totalActivities(cs.getActivityCount())
-                        .totalEntries(cs.getEntryCount())
+                        .activityCount(cs.getActivityCount())
+                        .entryCount(cs.getEntryCount())
                         .build());
     }
 }
