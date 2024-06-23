@@ -20,8 +20,8 @@ const ManagerBase = <T extends BaseEntity>({
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [sortField, setSortField] = useState<keyof T | undefined>(columns.find(column => column.sortable)?.key);
-  const [sortOrder, setSortOrder] = useState<string>('asc');
+  const [sortField, setSortField] = useState<keyof T | undefined>(undefined)
+  const [sortOrder, setSortOrder] = useState<string | undefined >(undefined);
   const [editingItem, setEditingItem] = useState<T | null>(null);
   const itemsPerPage = 10;
   const fetchData = useCallback(() => {
@@ -74,9 +74,16 @@ const ManagerBase = <T extends BaseEntity>({
     } 
   };
 
-  const handleSort = (field: keyof T) => { 
+  const toggleSort = (field: keyof T) => { 
     if (sortField === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      if (sortOrder === 'asc') {
+        setSortOrder('desc');
+      } else if (sortOrder === 'desc') {
+        setSortField(undefined);
+        setSortOrder(undefined);
+      } else {
+        setSortOrder('asc');
+      }
     } else {
       setSortField(field);
       setSortOrder('asc');
@@ -113,7 +120,7 @@ const ManagerBase = <T extends BaseEntity>({
                   (column) => (
                     <TableCell 
                       key={column.key as string} 
-                      onClick={column.sortable ? () => handleSort(column.key) : undefined}
+                      onClick={column.sortable ? () => toggleSort(column.key) : undefined}
                       style={{cursor: column.sortable ? 'pointer' : 'default'}}>
                         {column.header}
                         {column.sortable && sortField === column.key && (sortOrder === 'asc' ? ' ↑' : ' ↓')}
