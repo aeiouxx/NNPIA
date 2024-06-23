@@ -30,12 +30,18 @@ public class CategoryController {
     public Page<CategorySummaryResponse> getCategorySummaries(@RequestParam(defaultValue = "0") int page,
                                                               @RequestParam(defaultValue = "10") int size,
                                                               @RequestParam(required = false) String filter,
-                                                              @RequestParam(defaultValue = "name") String sortField,
-                                                              @RequestParam(defaultValue = "asc") String sortOrder,
+                                                              @RequestParam(required = false) String sortField,
+                                                              @RequestParam(required = false) String sortOrder,
                                                               @AuthenticationPrincipal User user) {
         log.debug("Getting category summaries for user: {}", user);
-        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortField);
-        PageRequest pageable = PageRequest.of(page, size, sort);
+        PageRequest pageable;
+        if (sortField == null || sortOrder == null) {
+            pageable = PageRequest.of(page, size);
+        }
+        else {
+            Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortField);
+            pageable = PageRequest.of(page, size, sort);
+        }
         Page<CategorySummaryResponse> result = categorySummaryService.getForUser(pageable, user.getId(), filter);
         log.debug("First page: {}", result.getContent());
         return result;

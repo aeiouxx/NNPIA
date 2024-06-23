@@ -38,6 +38,9 @@ public class ActivityService {
     @Transactional
     public Activity updateActivity(String oldName, ActivityRequest request, User user) {
         var updatedActivity = request.toEntity();
+        var updatedCategory = categoryRepository.findByUserIdAndName(user.getId(), request.getCategory())
+                .orElseThrow(() -> new NotFoundException(Category.class));
+        updatedActivity.setCategory(updatedCategory);
         var existingActivity = activityRepository.findByNameAndUserId(oldName, user.getId())
                 .orElseThrow(() -> new NotFoundException(Activity.class));
         existingActivity.setName(updatedActivity.getName());
