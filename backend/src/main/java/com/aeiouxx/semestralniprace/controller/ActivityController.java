@@ -13,6 +13,9 @@ import com.aeiouxx.semestralniprace.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,22 +31,25 @@ public class ActivityController {
     private final ActivityService activityService;
     private final CategoryService categoryService;
 
-    // todo: Paged and filtered activities
     @GetMapping
-    public void getActivities() {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public Page<ActivityResponse> getActivities(@RequestParam(defaultValue = "0") int page,
+                                                @RequestParam(defaultValue = "10") int size,
+                                                @RequestParam(required = false) String filter,
+                                                @RequestParam(defaultValue = "name") String sortField,
+                                                @RequestParam(defaultValue = "asc") String sortOrder,
+                                                @AuthenticationPrincipal User user) {
+        log.debug("Getting category summaries for user: {}", user);
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortField);
+        PageRequest pageable = PageRequest.of(page, size, sort);
+        Page<ActivityResponse> result = activityService.getForUser(pageable, user.getId(), filter);
+        log.debug("First page: {}", result.getContent());
+        return result;
     }
     @PostMapping
     public ResponseEntity<ActivityResponse> createActivity(@Valid @RequestBody ActivityRequest activityRequest,
                                                            @AuthenticationPrincipal User user) {
         log.info("Creating activity: {}, for user: {}", activityRequest, user.getUsername());
-        var category = activityRequest.getCategoryName() != null
-                ? FindCategoryOrThrow(activityRequest.getCategoryName())
-                : null;
-        var activity = activityRequest.toEntity();
-        activity.setCategory(category);
-        activity.setUser(user);
-        var created = activityService.createActivity(activity);
+        var created = activityService.createActivity(activityRequest, user);
         return ResponseEntity.ok(ActivityResponse.fromEntity(created));
     }
     @PutMapping("/{name}")
@@ -52,13 +58,7 @@ public class ActivityController {
                                                            @AuthenticationPrincipal User user
     ) {
         log.info("Updating activity `{}`: {}, for user: {}", name, activityRequest, user.getUsername());
-        var category = activityRequest.getCategoryName() != null
-                ? FindCategoryOrThrow(activityRequest.getCategoryName())
-                : null;
-        var activity = activityRequest.toEntity();
-        activity.setCategory(category);
-        activity.setUser(user);
-        var updated = activityService.updateActivity(name, activity);
+        var updated = activityService.updateActivity(name, activityRequest, user);
         return ResponseEntity.ok(ActivityResponse.fromEntity(updated));
     }
     @DeleteMapping("/{name}")
@@ -66,15 +66,7 @@ public class ActivityController {
                                @AuthenticationPrincipal User user
      ) {
         log.info("Deleting activity `{}` for user: {}", name, user.getUsername());
-        var activity = new Activity();
-        activity.setName(name);
-        activity.setUser(user);
-        activityService.deleteActivity(activity);
+        activityService.deleteByNameAndUserId(name, user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-     }
-
-     private Category FindCategoryOrThrow(String categoryName) {
-         return categoryService.findByNameForCurrentUser(categoryName)
-                 .orElseThrow(() -> new NotFoundException(Category.class));
      }
 }

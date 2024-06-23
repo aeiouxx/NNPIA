@@ -10,15 +10,12 @@ public class ActivityResponse {
     private String name;
     private String description;
     private String category;
-    private String user;
-
 
     public static ActivityResponse fromEntity(Activity activity) {
         return new ActivityResponse(
                 activity.getName(),
                 activity.getDescription(),
-                activity.getCategory().getName(),
-                activity.getUser().getUsername()
+                activity.getCategory().getName()
         );
     }
 }
