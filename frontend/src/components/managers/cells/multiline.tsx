@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 
 interface MultilineEditDialog {
@@ -30,7 +30,9 @@ const MultilineEditDialog : React.FC<MultilineEditDialog> = (
 
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+    <Dialog open={open} onClose={onClose} 
+      maxWidth="xl"
+      fullWidth>
       <DialogContent
         className="mt-4">
         <TextField

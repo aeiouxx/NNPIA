@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CategorySummary } from "../../../types/entities";
 import { Button, TextField } from "@mui/material";
 interface CategoryFormProps {

@@ -38,8 +38,11 @@ const SelectorCell = <T,>(
     return (
       <FormControl
         margin="normal">
-          <InputLabel>{label}</InputLabel>
+          <InputLabel>
+            {label}
+          </InputLabel>
           <Select
+            label={label}
             value={value}
             onChange={(e) => onChange(e.target.value as T)}>
               {items.map((item) => (
