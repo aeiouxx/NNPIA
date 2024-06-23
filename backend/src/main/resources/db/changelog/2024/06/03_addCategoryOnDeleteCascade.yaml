@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: aeiouxx
+      changes:
+          - addForeignKeyConstraint:
+              baseColumnNames: category_id
+              baseTableName: activities
+              constraintName: fk_activities_category_id
+              onDelete: CASCADE
+              referencedColumnNames: id
+              referencedTableName: categories
