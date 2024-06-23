@@ -45,7 +45,6 @@ export interface ColumnMetadata<T, K> {
 export interface ManagerProps<T> {
   managedItemName: string;
   columns: Array<ColumnMetadata<T, any>>;
-  getItemId: (item: T) => number | string;
   fetchItems: (params: FetchParameters) => Promise<PaginatedResponse<T>>;
   createItem: (item: Partial<T>) => Promise<void>;
   deleteItem: (id: number | string) => Promise<void>;
@@ -54,6 +53,5 @@ export interface ManagerProps<T> {
     onSubmit: (item: Partial<T>) => void;
     initialValues?: Partial<T>;
   }>;
-
   itemTransform?: (item: T) => T; 
 }

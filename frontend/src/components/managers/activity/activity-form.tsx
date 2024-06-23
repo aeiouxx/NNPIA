@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Button, TextField, MenuItem, Select, FormControl, InputLabel, Grid, FormHelperText } from '@mui/material';
+import { Button, TextField, MenuItem, Select, FormControl, InputLabel, Grid, FormHelperText, CircularProgress } from '@mui/material';
 import { Activity, Category } from '../../../types/entities';
 import { fetchCategories } from '../../../services/category-service';
 import { mapFieldToId } from '../../../utils/mapFieldToId';
@@ -18,7 +18,7 @@ const ActivitySchema = z.object({
 });
 
 const ActivityForm: React.FC<ActivityFormProps> = ({ onSubmit }) => {
-  const { register, handleSubmit, control, formState : {errors}} = useForm<Partial<Activity>>({
+  const { register, handleSubmit, control, formState : {errors, isSubmitting}, reset} = useForm<Partial<Activity>>({
     resolver: zodResolver(ActivitySchema),
   });
   const [categories, setCategories] = useState<Category[]>([]);
@@ -39,8 +39,13 @@ const ActivityForm: React.FC<ActivityFormProps> = ({ onSubmit }) => {
     loadCategories();
   }, []);
 
+  const onSubmitHandler = async (data: Partial<Activity>) => {
+    await onSubmit(data);
+    reset();
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}
+    <form onSubmit={handleSubmit(onSubmitHandler)}
           className='mx-8 mb-8'>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
@@ -51,10 +56,11 @@ const ActivityForm: React.FC<ActivityFormProps> = ({ onSubmit }) => {
             margin="normal"
             error={!!errors.name}
             helperText={errors.name?.message}
+            disabled={isSubmitting}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <FormControl fullWidth margin="normal" error={!!errors.category}>
+          <FormControl fullWidth margin="normal" error={!!errors.category} disabled={isSubmitting}>
             <InputLabel id="category-label">Category</InputLabel>
             <Controller
               name="category"
@@ -63,7 +69,7 @@ const ActivityForm: React.FC<ActivityFormProps> = ({ onSubmit }) => {
                 <Select
                   labelId="category-label"
                   {...field}
-                  defaultValue=""
+                  value={field.value || ''}
                   label="Category"
                 >
                   {categories.map((category) => (
@@ -89,11 +95,14 @@ const ActivityForm: React.FC<ActivityFormProps> = ({ onSubmit }) => {
             margin="normal"
             error={!!errors.description}
             helperText={errors.description?.message}
+            disabled={isSubmitting}
           />
         </Grid>
         <Grid item xs={12}>
-          <Button type="submit" variant="contained" color="primary">
-            Submit
+          <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
+          {
+            isSubmitting ? <CircularProgress size={24} /> : 'Submit'
+          }
           </Button>
         </Grid>
       </Grid>

@@ -23,16 +23,12 @@ const CategoryManager: React.FC = () => {
     },
     { 
       key: 'entryCount', header: 'Total Entries', sortable: true, editable: false,
-      renderCell: (value) => {
-        return <div>{value}</div>
-      }
     }
   ];
 
   return (
     <ManagerBase
       managedItemName="Category"
-      getItemId={(item) => item.name}
       columns={columns}
       fetchItems={fetchCategorySummaries}
       createItem={createCategory}

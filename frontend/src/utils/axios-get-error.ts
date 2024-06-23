@@ -14,10 +14,14 @@ export const mapErrorToMessage = (error : any, mapping : ErrorMapping = {}) => {
         if (!mapping[error.response.status] &&
             customError.response && customError.response.data) 
         {
-            const errors = customError.response.data;
-            const messages = Object.values(errors).join("\n");
-            if (messages.length > 0) {
-                return messages;
+            if (Array.isArray(customError.response.data)) {
+                const messages = Object.values(customError.response.data).join("\n");
+                if (messages.length > 0) {
+                    return messages;
+                }
+            }
+            else if (customError.response.data) {
+                return customError.response.data;
             }
         }
         return mapping[error.response.status] || error.response.data.message || "An unexpected error occurred, please try again later.";

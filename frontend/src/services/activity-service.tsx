@@ -6,13 +6,14 @@ export const fetchActivities = async (params: FetchParameters): Promise<Paginate
   return response.data;
 };
 export const createActivity = async (activity: Partial<Activity>): Promise<void> => {
+  console.log(JSON.stringify(activity));
   await protectedAxios.post('/activities', activity);
 };
-export const deleteActivity = async (id: string): Promise<void> => {
+export const deleteActivity = async (id: number | string): Promise<void> => {
   var encoded = encodeURIComponent(id);
   await protectedAxios.delete(`/activities/${encoded}`);
 };
-export const editActivity = async (id: string, activity: Partial<Activity>): Promise<void> => {
+export const editActivity = async (id: number | string, activity: Partial<Activity>): Promise<void> => {
   var encoded = encodeURIComponent(id);
   await protectedAxios.put(`/activities/${encoded}`, activity);
 };
