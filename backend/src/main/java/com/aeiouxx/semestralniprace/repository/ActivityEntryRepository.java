@@ -10,9 +10,6 @@ import java.util.List;
 
 public interface ActivityEntryRepository extends JpaRepository<ActivityEntry, Long> {
     List<ActivityEntry> findByActivityId(Long activityId);
-
-
-
     @Query("SELECT ae FROM ActivityEntry ae WHERE ae.activity.user.id = :userId "
             + "AND ((:startTime BETWEEN ae.startTime AND ae.endTime) "
             + "OR (:endTime BETWEEN ae.startTime AND ae.endTime) "

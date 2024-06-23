@@ -37,13 +37,11 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
-
     @ExceptionHandler(OverlappingActivityEntryException.class)
     public ResponseEntity<Object> handleOverlappingActivityEntry(OverlappingActivityEntryException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(ex.getMessage());
     }
-
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {

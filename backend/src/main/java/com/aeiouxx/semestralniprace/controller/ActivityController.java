@@ -59,7 +59,7 @@ public class ActivityController {
     }
     @DeleteMapping("/{name}")
     public ResponseEntity<?> deleteActivity(@PathVariable String name,
-                               @AuthenticationPrincipal User user
+                                            @AuthenticationPrincipal User user
      ) {
         log.info("Deleting activity `{}` for user: {}", name, user.getUsername());
         activityService.deleteByNameAndUserId(name, user);
