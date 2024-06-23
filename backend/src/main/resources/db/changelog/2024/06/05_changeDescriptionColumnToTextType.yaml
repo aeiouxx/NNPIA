@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: aeiouxx
+      changes:
+        -  modifyDataType:
+            columnName: description
+            newDataType: text
+            tableName: activities

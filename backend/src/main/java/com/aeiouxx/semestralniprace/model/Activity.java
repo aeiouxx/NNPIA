@@ -20,7 +20,7 @@ public class Activity {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String description;
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
