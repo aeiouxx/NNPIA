@@ -1,5 +1,6 @@
 package com.aeiouxx.semestralniprace.service;
 
+import com.aeiouxx.semestralniprace.dto.CategoryResponse;
 import com.aeiouxx.semestralniprace.dto.CategorySummaryResponse;
 import com.aeiouxx.semestralniprace.model.User;
 import com.aeiouxx.semestralniprace.repository.CategoryRepository;
@@ -13,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.aeiouxx.semestralniprace.model.Category;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,8 +23,8 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     // Advanced operations
-    public Page<Category> getForUser(Pageable pageable, User user) {
-        return categoryRepository.findByUserId(pageable, user.getId());
+    public List<Category> findAllByUser(User user) {
+        return categoryRepository.findByUserId(user.getId());
     }
     public Optional<Category> findByNameForCurrentUser(String name) {
         return categoryRepository.findByUserIdAndName(getUserId(), name);
@@ -46,7 +48,6 @@ public class CategoryService {
         categoryRepository.deleteByNameAndUserId(name, user.getId());
     }
     // < Basic CRUD operations
-    // todo: remove not needed
     private Long getUserId() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByUsername(username)

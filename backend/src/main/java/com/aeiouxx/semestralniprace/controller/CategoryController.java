@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/categories")
 @RequiredArgsConstructor
@@ -37,6 +39,14 @@ public class CategoryController {
         Page<CategorySummaryResponse> result = categorySummaryService.getForUser(pageable, user.getId(), filter);
         log.debug("First page: {}", result.getContent());
         return result;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CategoryResponse>> getCategories(@AuthenticationPrincipal User user) {
+        log.debug("Getting categories for user: {}", user);
+        var categories = categoryService.findAllByUser(user);
+        return new ResponseEntity<>(CategoryResponse.fromEntities(categories),
+                HttpStatus.OK);
     }
 
     @PostMapping
