@@ -6,14 +6,6 @@ import { ProtectedRoute } from './security/protected-route.tsx';
 import NotFoundPage from './components/not-found-page.tsx';
 import CategoryManager from './components/managers/category/category-manager.tsx';
 import ActivityManager from './components/managers/activity/activity-manager.tsx';
-import ActivityForm from './components/managers/activity/activity-form.tsx';
-import { createActivity } from './services/activity-service.tsx';
-import { create } from '@mui/material/styles/createTransitions';
-import { Activity } from './types/entities.ts';
-
-const handleCreate = async (activity: Partial<Activity>) => {
-  await createActivity(activity);
-};
 
 const router = createBrowserRouter([
   {

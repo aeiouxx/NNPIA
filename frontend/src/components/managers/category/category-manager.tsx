@@ -1,5 +1,4 @@
-import { BaseEntity, CategorySummary, ColumnMetadata, FetchParameters, PaginatedResponse } from "../../../types/entities";
-import protectedAxios from "../../../utils/axios-token";
+import { CategorySummary, ColumnMetadata } from "../../../types/entities";
 import { mapFieldToId } from "../../../utils/mapFieldToId";
 import ManagerBase from "../manager-base";
 import CategoryForm from "./category-form";
