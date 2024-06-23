@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.aeiouxx.semestralniprace.controller.utils.PageUtils.createPageRequest;
+
 @RestController
 @RequestMapping("/categories")
 @RequiredArgsConstructor
@@ -34,14 +36,7 @@ public class CategoryController {
                                                               @RequestParam(required = false) String sortOrder,
                                                               @AuthenticationPrincipal User user) {
         log.debug("Getting category summaries for user: {}", user);
-        PageRequest pageable;
-        if (sortField == null || sortOrder == null) {
-            pageable = PageRequest.of(page, size);
-        }
-        else {
-            Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortField);
-            pageable = PageRequest.of(page, size, sort);
-        }
+        PageRequest pageable = createPageRequest(page, size, sortField, sortOrder);
         Page<CategorySummaryResponse> result = categorySummaryService.getForUser(pageable, user.getId(), filter);
         log.debug("First page: {}", result.getContent());
         return result;

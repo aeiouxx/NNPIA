@@ -2,14 +2,9 @@ package com.aeiouxx.semestralniprace.controller;
 
 import com.aeiouxx.semestralniprace.dto.ActivityRequest;
 import com.aeiouxx.semestralniprace.dto.ActivityResponse;
-import com.aeiouxx.semestralniprace.model.Activity;
-import com.aeiouxx.semestralniprace.model.Category;
 import com.aeiouxx.semestralniprace.model.User;
-import com.aeiouxx.semestralniprace.repository.UserRepository;
-import com.aeiouxx.semestralniprace.repository.exception.NotFoundException;
 import com.aeiouxx.semestralniprace.service.ActivityService;
 import com.aeiouxx.semestralniprace.service.CategoryService;
-import com.aeiouxx.semestralniprace.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import static com.aeiouxx.semestralniprace.controller.utils.PageUtils.createPageRequest;
 
 @RestController
 @RequestMapping("/activities")
@@ -39,18 +34,13 @@ public class ActivityController {
                                                 @RequestParam(required = false) String sortOrder,
                                                 @AuthenticationPrincipal User user) {
         log.debug("Getting category summaries for user: {}", user);
-        PageRequest pageable;
-        if (sortField == null || sortOrder == null) {
-            pageable = PageRequest.of(page, size);
-        }
-        else {
-            Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortField);
-            pageable = PageRequest.of(page, size, sort);
-        }
+        PageRequest pageable = createPageRequest(page, size, sortField, sortOrder);
         Page<ActivityResponse> result = activityService.getForUser(pageable, user.getId(), filter);
         log.debug("First page: {}", result.getContent());
         return result;
     }
+
+
     @PostMapping
     public ResponseEntity<ActivityResponse> createActivity(@Valid @RequestBody ActivityRequest activityRequest,
                                                            @AuthenticationPrincipal User user) {
