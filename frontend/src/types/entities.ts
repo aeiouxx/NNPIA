@@ -8,6 +8,16 @@ export interface CategorySummary extends BaseEntity {
   entryCount: number;
 }
 
+export interface Category extends BaseEntity {
+  name: string;
+}
+
+export interface Activity extends BaseEntity {
+  name: string;
+  description: string;
+  category: string;
+}
+
 export interface PaginatedResponse<T> {
   content: T[];
   totalPages: number;

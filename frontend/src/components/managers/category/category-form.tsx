@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { CategorySummary } from "../../../../types";
+import { CategorySummary } from "../../../types/entities";
 import { Button, TextField } from "@mui/material";
-
 interface CategoryFormProps {
   onSubmit: (item : Partial<CategorySummary>) => void;
 }

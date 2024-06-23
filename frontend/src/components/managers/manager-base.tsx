@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { BaseEntity, ManagerProps, PaginatedResponse } from "../../../../types";
-import { mapErrorToMessage } from "../../../../utils/axios-get-error";
+import { BaseEntity, ManagerProps, PaginatedResponse } from "../../types/entities";
+import { mapErrorToMessage } from "../../utils/axios-get-error";
 import { Alert, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
 import PaginationControls from "./pagination-controls";
 
@@ -85,7 +85,7 @@ const ManagerBase = <T extends BaseEntity>({
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl mb-4">{managedItemName} Manager</h2>
+      <h2 className="text-2xl mb-4 text-left">{managedItemName} Manager</h2>
       <FormComponent
         onSubmit={handleCreate}
         />

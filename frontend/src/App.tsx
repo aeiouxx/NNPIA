@@ -4,7 +4,9 @@ import { AuthenticationProvider } from './security/authentication-context.tsx'
 import AuthPage from './components/auth-page.tsx';
 import { ProtectedRoute } from './security/protected-route.tsx';
 import NotFoundPage from './components/not-found-page.tsx';
-import CategoryManager from './components/protected/managers/category/category-manager.tsx';
+import CategoryManager from './components/managers/category/category-manager.tsx';
+import ActivityForm from './components/managers/activity/activity-manager.tsx';
+import { Activity } from './types/entities.ts';
 
 
 const router = createBrowserRouter([
@@ -24,6 +26,10 @@ const router = createBrowserRouter([
         path: "category",
         element: <CategoryManager />
       },
+      {
+        path: "activity",
+        element: <ActivityForm onSubmit={(activity: Partial<Activity>) => console.log(activity)} />
+      }
     ],
   },
   {
