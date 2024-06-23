@@ -2,6 +2,7 @@ import { BaseEntity, CategorySummary, ColumnMetadata, FetchParameters, Paginated
 import protectedAxios from "../../../../utils/axios-token";
 import { mapFieldToId } from "../../../../utils/mapFieldToId";
 import ManagerBase from "../base/manager-base";
+import CategoryForm from "./category-form";
 
 
 
@@ -47,7 +48,7 @@ const CategoryManager: React.FC = () => {
       createItem={createCategory}
       deleteItem={deleteCategory}
       editItem={editCategory}
-      FormComponent={() => <div>Form</div>}
+      FormComponent={CategoryForm}
       itemTransform={(item) => mapFieldToId('name', item)}
       />
   )

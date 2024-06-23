@@ -44,7 +44,11 @@ const ManagerBase = <T extends BaseEntity>({
       await createItem(item);
       fetchData();
     } catch (error) {
-      setErrorMessage(mapErrorToMessage(error));
+      setErrorMessage(mapErrorToMessage(error, 
+        {
+          409: `${managedItemName} already exists.`
+        }
+      ));
     }
   };
   const handleDelete = async (id: number | string) => {
@@ -147,24 +151,24 @@ const ManagerBase = <T extends BaseEntity>({
                         {
                           editingItem && editingItem.id === item.id 
                             ? (
-                              <>
-                                <Button variant="contained" color="primary" onClick={() => handleSaveEdit(item.id, editingItem)}>
+                              <div className="flex space-x-2">
+                                <Button variant="contained" color="success" onClick={() => handleSaveEdit(item.id, editingItem)}>
                                   Save
                                 </Button>
-                                <Button variant="contained" color="secondary" onClick={() => setEditingItem(null)}>
+                                <Button variant="contained" color="error" onClick={() => setEditingItem(null)}>
                                   Cancel
                                 </Button>
-                              </>
+                              </div>
                           ) 
                             : (
-                              <>
+                              <div className="flex space-x-2">
                               <Button variant="contained" color="primary" onClick={() => handleEdit(item)}>
                                 Edit
                               </Button>
                               <Button variant="contained" color="error" onClick={() => handleDelete(item.id)}>
                                 Delete
                               </Button>
-                            </>)
+                            </div>)
                         }
                       </TableCell>
                     </TableRow>

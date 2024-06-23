@@ -2,11 +2,11 @@
 interface PaginationControlsProps {
   currentPage: number;
   totalPages: number;
-  handleChange: (page: number) => void
+  onPageChange: (page: number) => void
 }
 
 
-const PaginationControls: React.FC<PaginationControlsProps> = ({ currentPage, totalPages, handleChange }) => {
+const PaginationControls: React.FC<PaginationControlsProps> = ({ currentPage, totalPages, onPageChange: handleChange }) => {
   return (
     <div className="flex justify-between items-center mt-4">
       <button
