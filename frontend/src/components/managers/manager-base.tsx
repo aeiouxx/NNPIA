@@ -99,7 +99,9 @@ const ManagerBase = <T extends BaseEntity>({
       {errorMessage &&
       <div className="flex mb-4 flex-1">
         <Alert severity="error">{errorMessage}
-          <Button onClick={() => setErrorMessage(null)} className="text-white p-2 rounded ml-4">Close</Button>
+          <Button onClick={() => setErrorMessage(null)} className="text-white p-2 rounded ml-4">
+            Close
+          </Button>
         </Alert>
       </div>
       }
