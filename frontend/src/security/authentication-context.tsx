@@ -9,7 +9,6 @@ export interface UserInfo {
 
 interface AuthenticationContextType {
   isAuthenticated: boolean;
-  user: UserInfo | null;
   login: (token : string) => void;
   logout: () => void;
 }
@@ -21,7 +20,6 @@ interface AuthenticationProviderProps {
 
 export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({children}) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [user, setUser] = useState<UserInfo | null>({ username: "Placeholder"});
 
   const login = (token: string) => {
     localStorage.setItem("token", token);
@@ -62,7 +60,7 @@ const validateToken = async (token: string): Promise<boolean> => {
 };
 
   return (
-    <AuthenticationContext.Provider value= {{ isAuthenticated, login, logout, user }}>
+    <AuthenticationContext.Provider value= {{ isAuthenticated, login, logout }}>
       {children}
     </AuthenticationContext.Provider>
   );
