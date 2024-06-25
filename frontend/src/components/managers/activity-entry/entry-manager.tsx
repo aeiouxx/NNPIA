@@ -51,17 +51,13 @@ const ActivityEntryManager: React.FC = () => {
       sortable: true,
       editable: true,
       renderCell: (value : any) => {
-        var locale = dayjs.tz.guess();
-        console.log(JSON.stringify(locale));
-        const converted = dayjs(value).tz(locale).format('LLL');
-        console.log(JSON.stringify(converted));
         return dayjs(value).format('LLL');
       },
       renderEditCell: (value, onChange) => (
         <DatePickerCell
           value={dayjs(value)}
           onChange={onChange}
-          label="Start Time"
+          label="End Time"
           />
       )
     }

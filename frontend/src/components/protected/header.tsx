@@ -1,7 +1,5 @@
-import { UserInfo } from "../../security/authentication-context"
 
 type HeaderProps = {
-  user: UserInfo;
   onLogout: () => void;
   isAuthenticated: boolean;
 }
