@@ -54,7 +54,10 @@ public class ActivityEntryService {
     }
 
     private void ThrowIfTimeslotOccupied(Activity activity, ActivityEntry entry) {
-        var overlap = activityEntryRepository.getPotentialOverlappingEntries(activity.getId(), entry.getStartTime(), entry.getEndTime());
+        var overlap = activityEntryRepository.getPotentialOverlappingEntries(activity.getId(),
+                entry.getId(),
+                entry.getStartTime(),
+                entry.getEndTime());
         if (!overlap.isEmpty()) {
             throw new OverlappingActivityEntryException("Activity entry for activity is overlapping with another entry");
         }

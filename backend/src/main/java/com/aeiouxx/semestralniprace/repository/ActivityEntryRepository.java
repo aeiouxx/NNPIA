@@ -24,11 +24,12 @@ public interface ActivityEntryRepository extends JpaRepository<ActivityEntry, Lo
     void deleteByIdAndUserId(Long id, Long userId);
 
     @Query("SELECT ae FROM ActivityEntry ae " +
-            "WHERE ae.activity.id = :activityId AND " +
+            "WHERE ae.activity.id = :activityId AND ae.id <> :entryId AND " +
             "((ae.startTime BETWEEN :start AND :end) OR " +
             "(ae.endTime BETWEEN :start AND :end))"
     )
     List<ActivityEntry> getPotentialOverlappingEntries(@Param("activityId") Long activityId,
+                                                       @Param("entryId") Long entryId,
                                                        @Param("start") ZonedDateTime start,
                                                        @Param("end") ZonedDateTime end);
 }
