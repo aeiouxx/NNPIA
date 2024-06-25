@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,15 @@ public class ActivityService {
         return activityRepository.findActivitiesByUserId(pageable, userId, filter)
                 .map(ActivityResponse::fromEntity);
     }
+
+    public List<ActivityResponse> getAllForUser(Long userId) {
+        var activities = activityRepository.findByUserId(userId);
+        return activities
+                .stream()
+                .map(ActivityResponse::fromEntity)
+                .toList();
+    }
+
     @Transactional
     public Activity createActivity(ActivityRequest request, User user) {
         var activity = request.toEntity();

@@ -46,8 +46,7 @@ public class CategoryController {
     public ResponseEntity<List<CategoryResponse>> getCategories(@AuthenticationPrincipal User user) {
         log.debug("Getting categories for user: {}", user);
         var categories = categoryService.findAllByUser(user);
-        return new ResponseEntity<>(CategoryResponse.fromEntities(categories),
-                HttpStatus.OK);
+        return ResponseEntity.ok(CategoryResponse.fromEntities(categories));
     }
 
     @PostMapping
@@ -57,8 +56,9 @@ public class CategoryController {
         var category = categoryDTO.toEntity();
         var result = categoryService.create(category, user);
         var response = CategoryResponse.fromEntity(result);
-        return new ResponseEntity<>(response,
-                HttpStatus.CREATED);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @PutMapping("/{name}")
@@ -68,8 +68,7 @@ public class CategoryController {
         log.debug("Updating category for user: {}", user);
         var category = categoryDTO.toEntity();
         var result = categoryService.update(name, category);
-        return new ResponseEntity<>(CategoryResponse.fromEntity(result),
-                HttpStatus.OK);
+        return ResponseEntity.ok(CategoryResponse.fromEntity(result));
     }
 
     @DeleteMapping("/{name}")
@@ -77,6 +76,6 @@ public class CategoryController {
                                             @AuthenticationPrincipal User user) {
         log.debug("Deleting category for user: {}", user);
         categoryService.deleteByNameAndUser(name, user);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

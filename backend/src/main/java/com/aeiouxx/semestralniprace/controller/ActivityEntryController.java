@@ -1,66 +1,72 @@
 package com.aeiouxx.semestralniprace.controller;
 
-import com.aeiouxx.semestralniprace.dto.EntryRequest;
-import com.aeiouxx.semestralniprace.dto.EntryResponse;
+import com.aeiouxx.semestralniprace.dto.ActivityEntryRequest;
+import com.aeiouxx.semestralniprace.dto.ActivityEntryResponse;
 import com.aeiouxx.semestralniprace.model.ActivityEntry;
 import com.aeiouxx.semestralniprace.model.User;
 import com.aeiouxx.semestralniprace.repository.ActivityRepository;
 import com.aeiouxx.semestralniprace.repository.exception.NotFoundException;
 import com.aeiouxx.semestralniprace.service.ActivityEntryService;
+import com.aeiouxx.semestralniprace.util.mapper.ActivityEntryMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.aeiouxx.semestralniprace.controller.utils.PageUtils.createPageRequest;
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/activities/{name}/entries")
+@RequestMapping("/activity-entries")
 public class ActivityEntryController {
-    private final ActivityRepository activityRepository;
     private final ActivityEntryService activityEntryService;
 
     @GetMapping
-    public ResponseEntity<List<ActivityEntry>> getEntries(@PathVariable("name") String activity,
+    public Page<ActivityEntryResponse> getActivityEntries(@RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "10") int size,
+                                                          @RequestParam(required = false) String filter,
+                                                          @RequestParam(required = false) String sortField,
+                                                          @RequestParam(required = false) String sortOrder,
                                                           @AuthenticationPrincipal User user) {
-        log.info("Getting entries for activity `{}`", activity);
-        throw new UnsupportedOperationException("Not implemented yet");
+        log.debug("Getting activity entries for user: {}", user);
+        PageRequest pageable = createPageRequest(page, size, sortField, sortOrder);
+        Page<ActivityEntryResponse> result = activityEntryService.getForUser(pageable, user.getId(), filter);
+        log.debug("First page: {}", result.getContent());
+        return result;
     }
 
     @PostMapping
-    public ResponseEntity<EntryResponse> createEntry(@PathVariable("name") String name,
-                                                     @Valid @RequestBody EntryRequest request,
-                                                     @AuthenticationPrincipal User user) {
-        log.info("Creating entry for activity `{}`: `{}`", name, request);
-        var activity = activityRepository.findByNameAndUserId(name, user.getId())
-                .orElseThrow(() -> NotFoundException.of(ActivityEntry.class));
-        var entry = request.toEntity();
-        entry.setActivity(activity);
-        var result = activityEntryService.createActivityEntry(entry);
-        return ResponseEntity.ok().body(EntryResponse.fromEntity(result));
+    public ResponseEntity<ActivityEntryResponse> createEntry(@Valid @RequestBody ActivityEntryRequest request,
+                                                             @AuthenticationPrincipal User user) {
+        log.debug("Creating entry {} for user: {}", request, user);
+        var created = activityEntryService.createActivityEntry(request, user);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ActivityEntryMapper.toResponse(created));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EntryResponse> updateEntry(@PathVariable("name") String name,
-                                                     @PathVariable("id") Long id,
-                                                     @Valid @RequestBody EntryRequest entry,
-                                                     @AuthenticationPrincipal User user) {
-        log.info("Updating entry `{}` for activity `{}`: `{}`", id, name, entry);
-        var activity = activityRepository.findByNameAndUserId(name, user.getId())
-                .orElseThrow(() -> NotFoundException.of(ActivityEntry.class));
-        var updated = activityEntryService.updateActivityEntry(id, entry.toEntity());
-        return ResponseEntity.ok().body(EntryResponse.fromEntity(updated));
+    public ResponseEntity<ActivityEntryResponse> updateEntry(@PathVariable Long id,
+                                                             @Valid @RequestBody ActivityEntryRequest request,
+                                                             @AuthenticationPrincipal User user)  {
+        log.debug("Updating entry {} for user: {}", request, user);
+        var updated = activityEntryService.updateActivityEntry(id, request, user);
+        return ResponseEntity.ok(ActivityEntryMapper.toResponse(updated));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteEntry(@PathVariable("name") String activity,
-                                         @PathVariable("id") Long id,
+    public ResponseEntity<?> deleteEntry(@PathVariable Long id,
                                          @AuthenticationPrincipal User user) {
-        log.info("Deleting entry `{}` for activity `{}`", id, activity);
-        throw new UnsupportedOperationException("Not implemented yet");
+        log.debug("Deleting entry with id: {} for user: {}", id, user);
+        activityEntryService.deleteActivityEntry(id, user);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

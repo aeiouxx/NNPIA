@@ -9,3 +9,7 @@ databaseChangeLog:
       file: db/changelog/2024/06/04_addActivityOnDeleteCascade.yaml
   - include:
       file: db/changelog/2024/06/05_changeDescriptionColumnToTextType.yaml
+  - include:
+      file: db/changelog/2024/06/06_addActivityEntryUserId.yaml
+  - include:
+      file: db/changelog/2024/06/07_activityEntryUseTimestamptz.yaml

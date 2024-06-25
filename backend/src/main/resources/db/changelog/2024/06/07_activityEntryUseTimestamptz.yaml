@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 7
+      author: aeiouxx
+      changes:
+        - modifyDataType:
+            columnName: start_time
+            newDataType: timestamptz
+            tableName: activity_entries
+        - modifyDataType:
+            columnName: end_time
+            newDataType: timestamptz
+            tableName: activity_entries

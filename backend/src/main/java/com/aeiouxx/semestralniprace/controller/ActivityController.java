@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.aeiouxx.semestralniprace.controller.utils.PageUtils.createPageRequest;
 
 @RestController
@@ -40,20 +42,29 @@ public class ActivityController {
         return result;
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<ActivityResponse>> getAllActivities(@AuthenticationPrincipal User user) {
+        log.debug("Getting all activities for user: {}", user);
+        List<ActivityResponse> result = activityService.getAllForUser(user.getId());
+        log.debug("All activities: {}", result);
+        return ResponseEntity.ok(result);
+    }
 
     @PostMapping
     public ResponseEntity<ActivityResponse> createActivity(@Valid @RequestBody ActivityRequest activityRequest,
                                                            @AuthenticationPrincipal User user) {
-        log.info("Creating activity: {}, for user: {}", activityRequest, user.getUsername());
+        log.debug("Creating activity: {}, for user: {}", activityRequest, user.getUsername());
         var created = activityService.createActivity(activityRequest, user);
-        return ResponseEntity.ok(ActivityResponse.fromEntity(created));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ActivityResponse.fromEntity(created));
     }
     @PutMapping("/{name}")
     public ResponseEntity<ActivityResponse> updateActivity(@PathVariable String name,
                                                            @Valid @RequestBody ActivityRequest activityRequest,
                                                            @AuthenticationPrincipal User user
     ) {
-        log.info("Updating activity `{}`: {}, for user: {}", name, activityRequest, user.getUsername());
+        log.debug("Updating activity `{}`: {}, for user: {}", name, activityRequest, user.getUsername());
         var updated = activityService.updateActivity(name, activityRequest, user);
         return ResponseEntity.ok(ActivityResponse.fromEntity(updated));
     }
@@ -63,6 +74,6 @@ public class ActivityController {
      ) {
         log.info("Deleting activity `{}` for user: {}", name, user.getUsername());
         activityService.deleteByNameAndUserId(name, user);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
      }
 }
