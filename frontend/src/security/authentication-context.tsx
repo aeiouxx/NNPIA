@@ -23,7 +23,6 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({c
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<UserInfo | null>({ username: "Placeholder"});
 
-
   const login = (token: string) => {
     localStorage.setItem("token", token);
     setIsAuthenticated(true);

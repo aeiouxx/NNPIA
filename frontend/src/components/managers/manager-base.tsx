@@ -4,7 +4,6 @@ import { mapErrorToMessage } from "../../utils/axios-get-error";
 import { Alert, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
 import PaginationControls from "./pagination-controls";
 
-
 const ManagerBase = <T extends BaseEntity>({
   managedItemName,
   columns,
@@ -13,7 +12,8 @@ const ManagerBase = <T extends BaseEntity>({
   deleteItem,
   editItem,
   FormComponent,
-  itemTransform
+  itemTransform,
+  customFilter
 }: ManagerProps<T>) => {
   const [items, setItems] = useState<T[]>([]);  
   const [filterText, setFilterText] = useState<string>('');
@@ -34,6 +34,7 @@ const ManagerBase = <T extends BaseEntity>({
       .then((response : PaginatedResponse<T>) => {
         const mapped = itemTransform ? response.content.map(itemTransform) : response.content;
         setItems(mapped);
+        console.log(JSON.stringify(mapped));
         setTotalPages(response.totalPages);
       })
       .catch((error) => setErrorMessage(mapErrorToMessage(error)));
@@ -44,11 +45,7 @@ const ManagerBase = <T extends BaseEntity>({
       await createItem(item);
       fetchData();
     } catch (error) {
-      setErrorMessage(mapErrorToMessage(error, 
-        {
-          409: `${managedItemName} already exists.`
-        }
-      ));
+      setErrorMessage(mapErrorToMessage(error));
     }
   };
   const handleDelete = async (id: number | string) => {
@@ -105,14 +102,18 @@ const ManagerBase = <T extends BaseEntity>({
         </Alert>
       </div>
       }
-      <TextField
-        value={filterText}
-        onChange={(e) => setFilterText(e.target.value)}
-        placeholder="Filter items"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        />
+      {
+        customFilter 
+          ? customFilter(filterText, setFilterText) 
+          : <TextField 
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              placeholder="Filter items"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              />
+      }
       <TableContainer component={Paper}>
         <Table>
           <TableHead>

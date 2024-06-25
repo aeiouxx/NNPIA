@@ -24,7 +24,7 @@ export const ProtectedRoute = () => {
       <div className="flex flex-1 flex-col mt-16 w-screen">
         <Sidebar />
         <main id="page-wrapper"
-          className="flex-1 ml-36 border-x-2 border-y-2 border-green-400">
+          className="flex-1 ml-36 border-x-2 border-y-2">
             <Outlet context={{ user }}/>
           </main>
       </div>

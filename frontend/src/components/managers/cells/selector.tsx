@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { FormControl, FormControlProps, InputLabel, MenuItem, Select, SelectProps } from "@mui/material";
 import { useEffect, useState } from "react";
 
 
@@ -10,6 +10,9 @@ interface SelectorProps<T> {
   label: string;
   itemKey: keyof T;
   itemValue: keyof T;
+
+  formControlProps?: FormControlProps;
+  selectProps?: SelectProps;
 }
 
 const SelectorCell = <T,>(
@@ -19,7 +22,9 @@ const SelectorCell = <T,>(
     fetchItems,
     label,
     itemKey,
-    itemValue 
+    itemValue,
+    formControlProps, 
+    selectProps,
   }: SelectorProps<T>) => {
     const [items, setItems] = useState<T[]>([]);
 
@@ -37,14 +42,16 @@ const SelectorCell = <T,>(
 
     return (
       <FormControl
-        margin="normal">
+        margin="normal"
+        {...formControlProps}>
           <InputLabel>
             {label}
           </InputLabel>
           <Select
             label={label}
             value={value}
-            onChange={(e) => onChange(e.target.value as T)}>
+            onChange={(e) => onChange(e.target.value as T)}
+            {...selectProps}>
               {items.map((item) => (
                 <MenuItem key={item[itemKey] as string} value={item[itemKey] as string}>
                 {item[itemValue] as string}

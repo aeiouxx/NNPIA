@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs";
+
 export interface BaseEntity {
   id: number | string;
 }
@@ -16,6 +18,12 @@ export interface Activity extends BaseEntity {
   name: string;
   description: string;
   category: string;
+}
+
+export interface ActivityEntry extends BaseEntity {
+  activity: string;
+  startTime: Dayjs;
+  endTime: Dayjs;
 }
 
 export interface PaginatedResponse<T> {
@@ -54,4 +62,5 @@ export interface ManagerProps<T> {
     initialValues?: Partial<T>;
   }>;
   itemTransform?: (item: T) => T; 
+  customFilter?: (value: string, setFilter: (value: string) => void) => React.ReactNode;
 }
