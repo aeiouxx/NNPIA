@@ -47,9 +47,10 @@ public class JwtServiceTest {
 
     @Test
     void testIsTokenExpired() {
+        Date beforeNow = new Date(System.currentTimeMillis() - 1000);
         String token = Jwts.builder()
                 .setSubject(TEST_USER)
-                .setExpiration(new Date(System.currentTimeMillis() - 1000)) // Set expiration in the past
+                .setExpiration(beforeNow)
                 .signWith(io.jsonwebtoken.SignatureAlgorithm.HS256, secretKey)
                 .compact();
         assert(jwtService.isTokenExpired(token));
