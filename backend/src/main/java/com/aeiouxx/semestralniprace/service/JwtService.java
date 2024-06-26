@@ -1,6 +1,7 @@
 package com.aeiouxx.semestralniprace.service;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -45,8 +46,12 @@ public class JwtService {
         return username.equals(userDetails.getUsername()) && !isTokenExpired(jwt);
     }
 
-    private boolean isTokenExpired(String jwt) {
-        return extractExpiration(jwt).before(new Date());
+    boolean isTokenExpired(String jwt) {
+        try {
+            return extractExpiration(jwt).before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
     }
 
     private Date extractExpiration(String jwt) {
